@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Attack Prediction App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            color: #0f0404;
+            text-align: center;
+        }
+
+        body::before {
+            content: '';
+            position: absolute; 
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('/static/assets/background.png') no-repeat center center;
+            background-size: cover;
+            opacity: 0.25; 
+            z-index: -1; 
+        }
+
+
+        h1, h2, p {
+            margin: 10px;
+        }
+        .form-container {
+            background-color: rgba(245, 245, 245, 0.7);
+            margin: 20px auto;
+            padding: 20px;
+            max-width: 600px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #28a745;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<h1>Heart Attack Prediction App</h1>
+<p>This app predicts if a patient has heart attack.</p>
+<p>Data obtained from Kaggle: 
+    <a href="https://www.kaggle.com/datasets/rashikrahmanpritom/heart-attack-analysis-prediction-dataset" target="_blank">
+        Heart Attack Analysis & Prediction Dataset
+    </a>.
+</p>
+
+<div class="form-container">
+    <h2>Enter Patient Details</h2>
+    <form action="{{ url_for('predict_datapoint') }}" method="post">
+        <div class="form-group">
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" min="18" max="120" required>
+        </div>
+        <div class="form-group">
+            <label for="sex">Gender (0: Female, 1: Male):</label>
+            <select id="sex" name="sex" required>
+                <option value="0">0 - Female</option>
+                <option value="1">1 - Male</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="cp">Chest Pain Type:</label>
+            <select id="cp" name="cp" required>
+                <option value="0">0 - Typical Angina</option>
+                <option value="1">1 - Atypical Angina</option>
+                <option value="2">2 - Non-Anginal Pain</option>
+                <option value="3">3 - Asymptomatic</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="trtbps">Resting Blood Pressure (mm Hg):</label>
+            <input type="number" id="trtbps" name="trtbps" required>
+        </div>
+        <div class="form-group">
+            <label for="chol">Cholesterol (mg/dl):</label>
+            <input type="number" id="chol" name="chol" required>
+        </div>
+        <div class="form-group">
+            <label for="fbs">Fasting Blood Sugar > 120 mg/dl (1: Yes, 0: No):</label>
+            <select id="fbs" name="fbs" required>
+                <option value="0">0 - No</option>
+                <option value="1">1 - Yes</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="restecg">Resting ECG Results:</label>
+            <select id="restecg" name="restecg" required>
+                <option value="0">0 - Normal</option>
+                <option value="1">1 - Abnormal</option>
+                <option value="2">2 - Hypertrophy</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="thalachh">Max Heart Rate Achieved:</label>
+            <input type="number" id="thalachh" name="thalachh" required>
+        </div>
+        <div class="form-group">
+            <label for="exng">Exercise Induced Angina (1: Yes, 0: No):</label>
+            <select id="exng" name="exng" required>
+                <option value="0">0 - No</option>
+                <option value="1">1 - Yes</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="oldpeak">Previous Peak:</label>
+            <input type="number" id="oldpeak" name="oldpeak" step="0.1" required>
+        </div>
+        <div class="form-group">
+            <label for="slp">Slope:</label>
+            <input type="number" id="slp" name="slp" required>
+        </div>
+        <div class="form-group">
+            <label for="caa">Number of Major Vessels (0-4):</label>
+            <select id="caa" name="caa" required>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="thall">Thalium Stress Test Result:</label>
+            <input type="number" id="thall" name="thall" required>
+        </div>
+        <button type="submit">Predict Heart Attack</button>
+    </form>
+
+    <div class="result">
+        <h2>Prediction Result</h2>
+        {% if results == 0 %}
+        <p style="color: green; font-weight: bold;">Less chance of heart attack (Target: 0)</p>
+        {% elif results == 1 %}
+        <p style="color: red; font-weight: bold;">More chance of heart attack (Target: 1)</p>
+        {% else %}
+        <p style="color: gray; font-weight: bold;">No prediction available.</p>
+        {% endif %}
+    </div>
+</div>
+
+</body>
+</html>
+
