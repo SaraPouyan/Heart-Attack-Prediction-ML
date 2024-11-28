@@ -17,7 +17,6 @@ def get_requirements(file_path:str) -> List[str]:
 
     return requirements
 
-
 setup(
     name='Heart-Attack-Prediction-ML',
     version='0.0.1',
