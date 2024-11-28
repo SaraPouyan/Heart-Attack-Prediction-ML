@@ -27,7 +27,7 @@ Heart-Attack-Prediction-ML is a machine learning application for predicting the 
    cd Heart-Attack-Prediction-ML
    ```
 
-2. **Create and activate a virtual environment** (optional but recommended):
+2. **Create and activate a virtual environment** (optional):
 
    ```bash
    python -m venv venv
@@ -57,7 +57,7 @@ Heart-Attack-Prediction-ML is a machine learning application for predicting the 
 Here’s a quick demonstration of the application:
 
   <div align="center">
-      <img src="./static/assets/demo.gif" width="500" height="400" alt="" width="500" height="" align="center">
+      <img src="./static/assets/demo.gif" width="500" height="400" alt="Demo GIF" align="center">
   </div>
 
 
